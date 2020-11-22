@@ -1,33 +1,24 @@
 package router
 
 import (
-	"os"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/luis16121013/apiGo/pkg/Repository"
+	"github.com/luis16121013/goApi/pkg/Repository"
+	"github.com/luis16121013/goApi/pkg/Users"
 )
 
 func StartServer() {
-	
-	server := echo.New()
 
 	r,err := Repository.SetupRepositoryMysql()
 	if err !=nil {
 		fmt.Println(err)
 	}
 
-	server.GET("/", func(c echo.Context) error{
-		return c.String(200, "ok!")
-	})
+	server := echo.New()
+	s := Users.NewService(r)
 
-	server.Logger.Fatal(server.Start( getPort() ))
+	server.GET("/api/v1", Users.AllUsers(s) )
+
+	server.Logger.Fatal(server.Start( GetPort() ))
 }
 
-
-func getPort() string{
-	port := os.Getenv("PORT")
-	if port != ""{
-		return ":"+port
-	}
-	return ":3000"
-}

@@ -1,12 +1,13 @@
 package Repository
 
 import (
+	"log"
 	"fmt"
-	"databse/sql"
+	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type RespositoryMysql struct{
+type RepositoryMysql struct{
 	db *sql.DB
 }
 
@@ -28,4 +29,14 @@ func SetupRepositoryMysql() (*RepositoryMysql, error){
 
 func url() string{
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=true",username,password,host,port,database)
+}
+
+
+//------------------------------------QUERY MYSQL
+func(s *RepositoryMysql) Query(query string, args ...interface{}) (*sql.Rows,error){
+	rows,err := s.db.Query( query, args...)
+	if err != nil{
+		log.Println(err)
+	}
+	return rows, err
 }
