@@ -1,23 +1,19 @@
 package Users
 
-type Repository interface{
-	FindAllUsers() ([]User, error)
-}
-
-type Service interface{
+type Service interface {
 	GetUsers() ([]User, error)
 }
 
-type service struct{
-	r Repository
+type service struct {
+	r UserRepository
 }
 
 //CREATE NEW SERVICE
-func NewService(r Repository) Service {
+func NewService(r UserRepository) Service {
 	return &service{r}
 }
 
 //METHODS SERVICES
-func(s *service) GetUsers() ([]User,error){
+func (s *service) GetUsers() ([]User, error) {
 	return s.r.FindAllUsers()
 }
